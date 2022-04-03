@@ -46,7 +46,7 @@ def user_account(request):
         return HttpResponseRedirect(reverse(login_view))
     account_object = Business.objects.get(owner=request.user.id)
     if request.POST:
-        form = BusinessForm(request.POST, instance=account_object)
+        form = BusinessForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name'].lower()
             city = form.cleaned_data['city'].lower()
@@ -55,7 +55,7 @@ def user_account(request):
             account_object.save()
             return HttpResponseRedirect(reverse(user_account))
     return render(request, 'website/account.html',
-                  context={'service_data': BusinessForm(instance=account_object), 'error': 'error'})
+                  context={'service_data': BusinessForm(instance=account_object)})
 
 
 def registration_view(request):

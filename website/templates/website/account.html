@@ -10,6 +10,7 @@
             <div class="col-md-6 text-md-start text-center py-6">
                 <div>
                     <p>На цій сторінці ви можете заповнити основну інформацію про ваш сервіс.</p>
+                    <p style="color: red">Натиснувши 'Save' дані оновлюються в базі без додаткових повідомлень в інтерфейсі!</p>
                 </div>
                 <form action="{% url 'account' %}" method="post">
                     <div class="mb-3">
@@ -60,6 +61,11 @@
                         <span class="input-group-text">Telegram</span>
                         <input name="{{ service_data.telegram.name }}" type="text" class="form-control"
                                value="{{ service_data.telegram.value }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Instagram</span>
+                        <input name="{{ service_data.insta.name }}" type="text" class="form-control"
+                               value="{{ service_data.insta.value }}">
                     </div>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Save</button>

@@ -53,6 +53,7 @@ class Business(models.Model):
     email = models.EmailField(default='', blank=True, null=True)
     phone = models.CharField(blank=True, null=True, max_length=16)
     telegram = models.CharField(blank=True, null=True, max_length=24)
+    insta = models.CharField(blank=True, null=True, max_length=24)
 
     def __str__(self):
         return self.name
