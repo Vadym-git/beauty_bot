@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Ukrainians Do</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'website/assets/img/favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'website/assets/img/favicons/favicon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'website/assets/img/favicons/favicon.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'website/assets/img/favicons/favicon.png' %}">
+    <link rel="manifest" href="{% static 'website/assets/img/favicons/manifest.json' %}">
+    <meta name="msapplication-TileImage" content="{% static 'website/assets/img/favicons/mstile-150x150.png' %}">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="{% static 'website/assets/css/theme.css' %}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" data-navbar-on-scroll="data-navbar-on-scroll">
+        <div class="container"><a class="navbar-brand" href="{% url 'index' %}"><img
+                src="{% static 'website/assets/img/logo.png' %}" height="31" alt="logo"/></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span>
+            </button>
+            <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    <!--              <li class="nav-item"><a class="nav-link" aria-current="page" href="#feature">Product</a></li>-->
+                    <!--              <li class="nav-item"><a class="nav-link" aria-current="page" href="#validation">Customers</a></li>-->
+                    <!--              <li class="nav-item"><a class="nav-link" aria-current="page" href="#superhero">Pricing</a></li>-->
+                    <!--              <li class="nav-item"><a class="nav-link" aria-current="page" href="#marketing">Resources</a></li>-->
+                </ul>
+                {% if user.is_authenticated%}
+                <div class="d-flex ms-lg-4">
+                    <a class="btn btn-secondary-outline" href="{% url 'account' %}">Account</a>&nbsp;
+                    <a class="btn btn-secondary-outline" href="{% url 'services' %}">My services</a>
+                    <a class="btn btn-warning ms-3" href="{% url 'logout' %}">Logout</a></div>
+                {% else %}
+                <div class="d-flex ms-lg-4"><a class="btn btn-secondary-outline" href="{% url 'login' %}">Sign In</a><a
+                        class="btn btn-warning ms-3" href="{% url 'registration' %}">Sign Up</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============   Content   ======   -->
+    {% block content %}
+    {% endblock %}
+
+
+    <!-- ============   Content end   ======   -->
+
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+    <section class="text-center py-0">
+
+        <div class="container">
+            <div class="container border-top py-3">
+                <div class="row justify-content-between">
+                    <div class="col-12 col-md-auto mb-1 mb-md-0">
+                        <p class="mb-0">&copy; 2022 UA Do </p>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <!--                <p class="mb-0">-->
+                        <!--                  Made with<span class="fas fa-heart mx-1 text-danger"> </span>by <a class="text-decoration-none ms-1" href="https://themewagon.com/" target="_blank">ThemeWagon</a></p>-->
+                    </div>
+                </div>
+            </div>
+        </div><!-- end of .container-->
+
+    </section>
+    <!-- <section> close ============================-->
+    <!-- ============================================-->
+
+
+</main>
+<!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+
+
+<div class="modal fade" id="popupVideo" tabindex="-1" aria-labelledby="popupVideo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <iframe class="rounded" style="width:100%;height:500px;" src="https://www.youtube.com/embed/_lhdhL4UDIo"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<script src="{% static 'website/vendors/@popperjs/popper.min.js' %}"></script>
+<script src="{% static 'website/vendors/bootstrap/bootstrap.min.js' %}"></script>
+<script src="{% static 'website/vendors/is/is.min.js' %}"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+<script src="{% static 'website/vendors/fontawesome/all.min.js' %}"></script>
+<script src="{% static 'website/assets/js/theme.js' %}"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;family=Volkhov:wght@700&amp;display=swap"
+      rel="stylesheet">
+</body>
+
+</html>
