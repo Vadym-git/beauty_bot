@@ -52,8 +52,8 @@ class Business(models.Model):
     about = models.TextField(verbose_name='About business', default='', blank=True, null=True)
     email = models.EmailField(default='', blank=True, null=True)
     phone = models.CharField(blank=True, null=True, max_length=16, default='+353')
-    telegram = models.CharField(blank=True, null=True, max_length=24, default='')
-    insta = models.CharField(blank=True, null=True, max_length=24, default='')
+    telegram = models.CharField(blank=True, null=True, max_length=24, default='account_name')
+    insta = models.CharField(blank=True, null=True, max_length=24, default='account_name')
 
     def __str__(self):
         return self.name
