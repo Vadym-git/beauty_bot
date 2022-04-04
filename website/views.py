@@ -48,10 +48,14 @@ def user_account(request):
     if request.POST:
         form = BusinessForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name'].lower()
-            city = form.cleaned_data['city'].lower()
-            account_object.name = name
-            account_object.city = city
+            account_object.name = form.cleaned_data['name'].lower()
+            account_object.city = form.cleaned_data['city'].lower()
+            account_object.type_of_business = form.cleaned_data['type_of_business']
+            account_object.about = form.cleaned_data['about']
+            account_object.email = form.cleaned_data['email']
+            account_object.phone = form.cleaned_data['phone'].lower()
+            account_object.telegram = form.cleaned_data['telegram'].lower()
+            account_object.insta = form.cleaned_data['insta'].lower()
             account_object.save()
             return HttpResponseRedirect(reverse(user_account))
     return render(request, 'website/account.html',

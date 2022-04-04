@@ -48,12 +48,12 @@ class Business(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(verbose_name='Business name', max_length=64, default='Business name')
     city = models.CharField(verbose_name='City', max_length=64, default='city')
-    type_of_business = models.ForeignKey(BusinessField, on_delete=models.SET_NULL, null=True)
-    about = models.TextField(verbose_name='About business', default='')
+    type_of_business = models.ForeignKey(BusinessField, on_delete=models.SET_NULL, null=True, blank=True)
+    about = models.TextField(verbose_name='About business', default='', blank=True, null=True)
     email = models.EmailField(default='', blank=True, null=True)
-    phone = models.CharField(blank=True, null=True, max_length=16)
-    telegram = models.CharField(blank=True, null=True, max_length=24)
-    insta = models.CharField(blank=True, null=True, max_length=24)
+    phone = models.CharField(blank=True, null=True, max_length=16, default='+353')
+    telegram = models.CharField(blank=True, null=True, max_length=24, default='')
+    insta = models.CharField(blank=True, null=True, max_length=24, default='')
 
     def __str__(self):
         return self.name
