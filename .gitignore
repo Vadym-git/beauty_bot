@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+beauty/__pycache__/
+website/__pycache__/
+service_bot/__pycache__/
 *.py[cod]
 *$py.class
 *.sqlite3
