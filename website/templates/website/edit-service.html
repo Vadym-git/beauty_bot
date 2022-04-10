@@ -32,11 +32,13 @@
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea1" class="form-label">About your service:</label>
                         <textarea name="{{ service_data.description.name }}" class="form-control"
-                                  id="exampleFormControlTextarea1" rows="3">{{ service_data.description.value }}</textarea>
+                                  id="exampleFormControlTextarea1"
+                                  rows="3">{{ service_data.description.value }}</textarea>
                         <div class="form-text">Вкажіть більше деталей про вашу послугу.</div>
                     </div>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'd_service' service_data.instance.id %}" style="background-color: red;" type="button" class="btn btn-primary">Delete</a>
                 </form>
             </div>
             <div class="col-md-6 text-end">

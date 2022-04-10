@@ -3,8 +3,10 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import time
-from beauty.models import Business, ServiceType
+from beauty.models import Business, ServiceType, City, Counties
+from service_bot.settings import BASE_DIR
 from .forms import BusinessForm, ServiceTypeForm
+import json
 
 
 # Create your views here.
@@ -26,6 +28,16 @@ def edit_service(request, id):
         'service_data': ServiceTypeForm(instance=data)})
 
 
+def delete_service(request, s_id):
+    try:
+        service = ServiceType.objects.get(id=s_id)
+        if service.owner.owner.id == request.user.id:
+            service.delete()
+    except Exception as es:
+        pass
+    return HttpResponseRedirect(reverse(services_view))
+
+
 def services_view(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(login_view))
@@ -37,6 +49,7 @@ def services_view(request):
             description = form.cleaned_data['description']
             owner = Business.objects.get(owner=request.user)
             ServiceType(name=name, price=price, owner=owner, description=description).save()
+            return HttpResponseRedirect(reverse(services_view))
     services = ServiceType.objects.filter(owner=Business.objects.get(owner=request.user)).order_by('-id')
     return render(request, 'website/services.html', context={'service_data': ServiceTypeForm, 'services': services})
 
@@ -44,13 +57,19 @@ def services_view(request):
 def user_account(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(login_view))
-    account_object = Business.objects.get(owner=request.user.id)
+    try:
+        account_object = Business.objects.get(owner=request.user)
+    except Business.DoesNotExist:
+        account_object = Business(owner=request.user)
+        account_object.save()
     if request.POST:
         form = BusinessForm(request.POST)
         if form.is_valid():
+            print('True', form.cleaned_data['county'])
             account_object.name = form.cleaned_data['name'].lower()
-            account_object.city = form.cleaned_data['city'].lower()
+            account_object.city = form.cleaned_data['city']
             account_object.type_of_business = form.cleaned_data['type_of_business']
+            account_object.county = form.cleaned_data['county']
             account_object.about = form.cleaned_data['about']
             account_object.email = form.cleaned_data['email']
             account_object.phone = form.cleaned_data['phone'].lower()
@@ -70,6 +89,7 @@ def registration_view(request):
             email = request.POST['email']
             password = request.POST['password']
             repassword = request.POST['repassword']
+            policy = request.POST['policy']
         except KeyError:
             return render(request, 'website/registration.html', context={'error': 'Something went wrong'})
         if password != repassword:
@@ -81,8 +101,6 @@ def registration_view(request):
             user = User.objects.create_user(round(time.time() * 10000), email, password, )
             user.is_active = True
             user.save()
-            service = Business(owner=user)
-            service.save()
             return HttpResponseRedirect(reverse(login_view))
 
         #  если юзер с таким имейлом существует
@@ -114,6 +132,54 @@ def login_view(request):
     return render(request, 'website/login.html')
 
 
+def policy(request):
+    return render(request, 'website/policy.html')
+
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse(index_view))
+
+
+def add_cities(request):
+    if not request.user.is_superuser:
+        return HttpResponseRedirect(reverse(index_view))
+    with open(BASE_DIR / '../cities.json') as f:
+        data = json.load(f)
+        for county in data:
+            try:
+                county = Counties.objects.get(name=county)
+                if county:
+                    cities = data[county.name]
+                    for city in cities:
+                        if 'environs' in city:
+                            continue
+                        if len(city) > 32:
+                            continue
+                        try:
+                            city = City.objects.get(name=city)
+                        except City.DoesNotExist:
+                            ncity = City()
+                            ncity.name = city
+                            ncity.county = county
+                            ncity.save()
+                        except City.MultipleObjectsReturned:
+                            pass
+            except Counties.DoesNotExist:
+                ncounty = Counties()
+                ncounty.name = county
+                ncounty.save()
+                for city in data[county]:
+                    if 'environs' in city:
+                        continue
+                    ncity = City()
+                    ncity.name = city
+                    ncity.county = ncounty
+                    ncity.save()
+    return HttpResponse('Success', status=200)
+
+
+def get_cities(request, county: str):
+    cities = City.objects.filter(county=county).distinct().order_by('name')
+    cities = [[i.id, i.name] for i in cities]
+    return HttpResponse(json.dumps(cities))

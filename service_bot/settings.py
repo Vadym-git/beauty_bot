@@ -26,7 +26,7 @@ SECRET_KEY = os.environ['b_django_sk']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.124', '127.0.0.1', 'uado.ie']
+ALLOWED_HOSTS = ['192.168.0.124', '127.0.0.1', 'uado.ie', '*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.uado.ie', ]
 

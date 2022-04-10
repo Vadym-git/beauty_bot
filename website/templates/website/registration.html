@@ -11,7 +11,8 @@
                 <form action="{% url 'registration' %}" method="post">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input name="email" type="email" class="form-control" id="exampleInputEmail1"
+                               aria-describedby="emailHelp">
                         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
                     <div class="mb-3">
@@ -27,6 +28,8 @@
                     </div>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <input type="checkbox" id="policy" name="policy" value="accept" required>
+                    <label for="policy"> I have read <a href="{% url 'policy' %}">policy</a></label><br>
                 </form>
             </div>
             <div class="col-md-6 text-end"><img class="pt-7 pt-md-0 img-fluid"

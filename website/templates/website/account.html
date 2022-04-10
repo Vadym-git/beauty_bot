@@ -10,7 +10,8 @@
             <div class="col-md-6 text-md-start text-center py-6">
                 <div>
                     <p>На цій сторінці ви можете заповнити основну інформацію про ваш сервіс.</p>
-                    <p style="color: red">Натиснувши 'Save' дані оновлюються в базі без додаткових повідомлень в інтерфейсі!</p>
+                    <p style="color: red">Натиснувши 'Save' дані оновлюються в базі без додаткових повідомлень в
+                        інтерфейсі!</p>
                 </div>
                 <form action="{% url 'account' %}" method="post">
                     <div class="mb-3">
@@ -23,11 +24,24 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">{{ service_data.city.label }}</span>
-                        <input name="{{ service_data.city.name }}" type="text" class="form-control"
-                               value="{{ service_data.city.value|capfirst }}"
-                               aria-label="Username"
-                               aria-describedby="basic-addon1">
+                        <span class="input-group-text">{{ service_data.county.label }}</span>
+                        <select id="county" name="{{ service_data.county.name }}" class="form-select">
+                            {% for i in service_data.county %}
+                            <option value="{{ i.data.value }}" {% if i.data.selected %} selected{% endif %}>
+                                {{ i.data.label|capfirst }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">{{ service_data.city.label }}</span>
+                        <select id="cities" name="{{ service_data.city.name }}" class="form-select">
+                            {% for i in service_data.city %}
+                            <option value="{{ i.data.value }}" {% if i.data.selected %} selected{% endif %}>
+                                {{ i.data.label|capfirst }}
+                            </option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-text">Вказуйте назву міста, селища, тільки англійською мовою.</div>
                     <br>
@@ -35,18 +49,22 @@
                     <div class="input-group mb-3">
                         <select name="{{ service_data.type_of_business.name }}" class="form-select">
                             {% for i in service_data.type_of_business %}
-                            {{ i }}
+                            <option value="{{ i.data.value }}" {% if i.data.selected %} selected{% endif %}>
+                                {{ i.data.label|capfirst }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">About your business:</label>
-                        <textarea name="{{ service_data.about.name }}" class="form-control" id="exampleFormControlTextarea1" rows="3">{{ service_data.about.value }}</textarea>
+                        <label for="exampleFormControlTextarea1" class="form-label">Про ваш бізнес:</label>
+                        <textarea name="{{ service_data.about.name }}" class="form-control"
+                                  id="exampleFormControlTextarea1" rows="3">{{ service_data.about.value }}</textarea>
                         <div class="form-text">Розкажіть трішки про ваш сервіс</div>
                     </div>
-                    <p style="color: red">Контактні дані, які ви вкажете нижче, будуть доступні всім користувачам, які шукають ваші послуги</p>
+                    <p style="color: red">Контактні дані, які ви вкажете нижче, будуть доступні всім користувачам, які
+                        шукають ваші послуги</p>
                     <div class="input-group mb-3">
-                        <span class="input-group-text">@</span>
+                        <span class="input-group-text">e-mail</span>
                         <input name="{{ service_data.email.name }}" type="email" class="form-control"
                                value="{{ service_data.email.value }}"
                                aria-label="Username"
@@ -70,6 +88,11 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
+                <br>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'services' %}" class="btn btn-primary" type="button">Мої послуги</a>
+                </div>
+
             </div>
             <div class="col-md-6 text-end">
                 <img class="pt-7 pt-md-0 img-fluid" src="{% static 'website/assets/img/hero/hero-img.png' %}" alt=""/>

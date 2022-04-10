@@ -19,7 +19,7 @@
                         <div id="emailHelp" class="form-text">Приклад: Манікюр</div>
                     </div>
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">$</span>
+                        <span class="input-group-text" id="basic-addon1">€</span>
                         <input name="{{ service_data.price.name }}" type="number" step=".01" min="0"
                                class="form-control"
                                placeholder="9.99"
@@ -29,7 +29,7 @@
                     <div class="form-text">Вкажіть мінімальну вартість послуги. Приклад: 19.99</div>
                     <br>
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">About your service:</label>
+                        <label for="exampleFormControlTextarea1" class="form-label">Детальніше про послугу:</label>
                         <textarea name="{{ service_data.description.name }}" class="form-control"
                                   id="exampleFormControlTextarea1" rows="3">{{ service_data.about.value }}</textarea>
                         <div class="form-text">Вкажіть більше деталей про вашу послугу.</div>
@@ -43,7 +43,7 @@
                 {% for service in services %}
                 <div class="card" style="border: solid; border-width: 1px; border-color: #BCD0E5; margin-bottom: 5px;">
                     <div class="card-header">
-                        {{ service.name }} | ${{ service.price }}
+                        {{ service.name }} | € {{ service.price }}
                     </div>
                     <div class="card-body">
 <!--                        <h5 class="card-title"></h5>-->
