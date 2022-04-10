@@ -24,6 +24,10 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                <br>
+                <div>
+                    <p>Ще не маєте акаунту? <a style="color: orange;" href="{% url 'registration' %}">Зареєструватися</a></p>
+                </div>
             </div>
             <div class="col-md-6 text-end"><img class="pt-7 pt-md-0 img-fluid"
                                                 src="{% static 'website/assets/img/hero/hero-img.png' %}" alt=""/></div>
