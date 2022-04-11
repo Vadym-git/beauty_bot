@@ -65,7 +65,6 @@ def user_account(request):
     if request.POST:
         form = BusinessForm(request.POST)
         if form.is_valid():
-            print('True', form.cleaned_data['county'])
             account_object.name = form.cleaned_data['name'].lower()
             account_object.city = form.cleaned_data['city']
             account_object.type_of_business = form.cleaned_data['type_of_business']
