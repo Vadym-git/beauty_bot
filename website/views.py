@@ -71,9 +71,18 @@ def user_account(request):
             account_object.county = form.cleaned_data['county']
             account_object.about = form.cleaned_data['about']
             account_object.email = form.cleaned_data['email']
-            account_object.phone = form.cleaned_data['phone'].lower()
-            account_object.telegram = form.cleaned_data['telegram'].lower()
-            account_object.insta = form.cleaned_data['insta'].lower()
+            try:
+                account_object.phone = form.cleaned_data['phone'].lower()
+            except AttributeError:
+                account_object.phone = form.cleaned_data['phone']
+            try:
+                account_object.telegram = form.cleaned_data['telegram'].lower()
+            except AttributeError:
+                account_object.telegram = form.cleaned_data['telegram']
+            try:
+                account_object.insta = form.cleaned_data['insta'].lower()
+            except AttributeError:
+                account_object.insta = form.cleaned_data['insta']
             account_object.save()
             return HttpResponseRedirect(reverse(user_account))
     return render(request, 'website/account.html',
@@ -147,6 +156,7 @@ def add_cities(request):
         data = json.load(f)
         for county in data:
             try:
+                print(county)
                 county = Counties.objects.get(name=county)
                 if county:
                     cities = data[county.name]

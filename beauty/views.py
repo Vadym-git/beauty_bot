@@ -2,7 +2,7 @@ from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import os
-from .models import Counties, BotUser, City
+from .models import Counties, BotUser, City, BusinessField, ServiceType
 import requests
 
 # Create your views here.
@@ -24,21 +24,80 @@ def start(uid, request):
 def go(uid, request):
     counties = Counties.objects.all()
     keyboard = inline_keyboard(
-        [[{'text': i.name.capitalize(), 'callback_data': f'*set_county,{i.id}'}] for i in counties])
+        [[{'text': i.name.capitalize(), 'callback_data': f'*set_county,{i.id}'}] for i in counties]
+    )
     text = '&#129302; Супер! \n' \
            'Для початку, підкажи мені, в якому каунті(області) ти проживаєш, шукаєш послугу?\n'
     send_message(uid, text, parse_mode='HTML', reply_markup=keyboard)
     return
 
 
+def county_services(uid, request):
+    user = BotUser.objects.get(uid=uid)
+    services = ServiceType.objects.filter(owner__county_id=user.county_id).filter(
+        owner__type_of_business_id=user.business_field)
+
+
+def set_business_field(uid, business_field_id):
+    try:
+        text = '\U0001F917 Все налаштовано!\n' \
+               'Тепер ти можеш розпочати прошук \U0001F50D \n' \
+               'Або переглянути всі послуги в твоєму місті, чи county\n' \
+               'Для пошуку просто відправ мені свій запит та не забудь вказати перед ним знак оклику "!"\n' \
+               'До прикладу:\n' \
+               '!жіноча стрижка\n' \
+               '!манікюр\n'
+        user = BotUser.objects.get(uid=uid)
+        user.business_field_id = business_field_id
+        user.save()
+        send_message(uid, text)
+    except Exception as es:
+        print(es, '!' * 100)
+
+
+def get_business_fields(uid, request):
+    services = BusinessField.objects.all()
+    text = '\U0001F60E Обіріть сфуре послуг нижче'
+    keyboard = inline_keyboard(
+        [[{'text': i.name.capitalize(), 'callback_data': f'*set_business_field,{i.id}'}] for i in services]
+    )
+    send_message(uid, text, reply_markup=keyboard)
+
+
+def set_city(uid, city_id):
+    try:
+        user = BotUser.objects.get(uid=uid)
+        user.city_id = city_id
+        user.save()
+        keyword = inline_keyboard(
+            [[{'text': '\U0001F481 Обрати сферу послуг', 'callback_data': f'*get_business_fields,1'}]]
+        )
+        text = '&#129302; Просто чудово\n' \
+               'Залишився останній крок - обрати сфреру послуг!\n' \
+               'Тисни "Обрати сферу послуг"\n'
+        send_message(uid, text, reply_markup=keyword)
+    except BotUser.DoesNotExist:
+        print('set_city, something wrong', '!' * 100)
+
+
+def get_cities(uid, county_id):
+    cities = City.objects.filter(county=county_id)
+    keyboard = inline_keyboard(
+        [[{'text': i.name.capitalize(), 'callback_data': f'*set_city,{i.id}'}] for i in cities])
+    text = '&#129302; Будь ласка, виберіть ваше місто зі списку нижче:'
+    send_message(uid, text, reply_markup=keyboard)
+
+
 def set_county(uid, county):
     try:
         user = BotUser.objects.get(uid=uid)
-        user.county = Counties.objects.get(pk=county)
+        user.county_id = county
         user.save()
-        # if user.city:
-        # text = 'Супер'
-        # send_message(uid, )
+        text = 'Супер &#128076;\nЯ додав налаштування county до твого профілю!\n' \
+               'Щоб налаштувати місто, для пошуку тисни\n"&#127961;&#65039; Налаштувати місто"'
+        keyboard = inline_keyboard(
+            [[{'text': '\U0001F3D9 Налаштувати місто', 'callback_data': f'*get_cities,{county}'}]])
+        send_message(uid, text, reply_markup=keyboard)
     except:
         pass
 
@@ -46,7 +105,13 @@ def set_county(uid, county):
 bot_commands: dict = {
     '/start': start,
     '/go': go,
-    '*set_county': set_county
+    '*set_county': set_county,
+    '*get_cities': get_cities,
+    '*set_city': set_city,
+    '*get_business_fields': get_business_fields,
+    '*set_business_field': set_business_field,
+    '/county_services': county_services,
+    '/help': '',
 }
 
 
@@ -63,8 +128,10 @@ def response_to_user_request(uid, user_request: str):
     if user_request in bot_commands:
         command = bot_commands[user_request]
         return command(uid, user_request)
+    elif user_request[0] == '!':
+        send_message(uid, 'Oops')
     else:
-        return 'Oops something went wrong'
+        send_message(uid, '&#129302; Хм, я не розумію, що ти від мене хочеш.')
 
 
 def response_to_user_callback(uid, user_request: str):
@@ -72,6 +139,8 @@ def response_to_user_callback(uid, user_request: str):
     if command in bot_commands:
         command = bot_commands[command]
         command(uid, data)
+    else:
+        print(f'command: {command} not in bot_commands', '#' * 45)
 
 
 def send_message(uid, text: str, parse_mode='HTML', reply_markup='', url: str = 'sendMessage'):

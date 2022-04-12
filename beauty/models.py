@@ -13,7 +13,9 @@ class BotUser(models.Model):
     date_reg = models.DateTimeField(verbose_name='Registration date', blank=True, null=True)
     connect_date = models.DateTimeField(verbose_name='Last connection date', blank=True, null=True)
     county = models.ForeignKey('Counties', on_delete=models.SET_NULL, null=True, blank=True)
-    # city = models.CharField(verbose_name='City', max_length=64)
+    city = models.ForeignKey('City', on_delete=models.SET_NULL, blank=True, null=True)
+    business_field = models.ForeignKey('BusinessField', on_delete=models.SET_NULL, blank=True, null=True)
+    search = models.CharField(max_length=32, blank=True, null=True)
 
     @staticmethod
     def check_registration(user: dict):
