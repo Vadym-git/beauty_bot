@@ -22,12 +22,11 @@ def start(uid, request):
 
 
 def go(uid, request):
-    counties = Counties.objects.all()
-    keyboard = inline_keyboard(
-        [[{'text': i.name.capitalize(), 'callback_data': f'*set_county,{i.id}'}] for i in counties]
-    )
-    text = '&#129302; Супер! \n' \
+    text = '&#129302; Привіт! \n' \
            'Для початку, підкажи мені, в якому каунті(області) ти проживаєш, шукаєш послугу?\n'
+    keyboard = inline_keyboard(
+        [[{'text': '\U0001F301 Обрати свій county', 'callback_data': f'*get_counties,1'}]]
+    )
     send_message(uid, text, parse_mode='HTML', reply_markup=keyboard)
     return
 
@@ -57,7 +56,7 @@ def set_business_field(uid, business_field_id):
 
 def get_business_fields(uid, request):
     services = BusinessField.objects.all()
-    text = '\U0001F60E Обіріть сфуре послуг нижче'
+    text = '\U0001F60E Оберіть сфуре послуг нижче'
     keyboard = inline_keyboard(
         [[{'text': i.name.capitalize(), 'callback_data': f'*set_business_field,{i.id}'}] for i in services]
     )
@@ -73,7 +72,7 @@ def set_city(uid, city_id):
             [[{'text': '\U0001F481 Обрати сферу послуг', 'callback_data': f'*get_business_fields,1'}]]
         )
         text = '&#129302; Просто чудово\n' \
-               'Залишився останній крок - обрати сфреру послуг!\n' \
+               'Залишився останній крок - обрати сферу послуг!\n' \
                'Тисни "Обрати сферу послуг"\n'
         send_message(uid, text, reply_markup=keyword)
     except BotUser.DoesNotExist:
@@ -102,6 +101,15 @@ def set_county(uid, county):
         pass
 
 
+def get_counties(uid, request):
+    counties = Counties.objects.all()
+    text = '\U0001FA90 Вибери свій county зі списку нижче'
+    keyboard = inline_keyboard(
+        [[{'text': i.name.capitalize(), 'callback_data': f'*set_county,{i.id}'}] for i in counties]
+    )
+    send_message(uid, text, parse_mode='HTML', reply_markup=keyboard)
+
+
 bot_commands: dict = {
     '/start': start,
     '/go': go,
@@ -110,8 +118,9 @@ bot_commands: dict = {
     '*set_city': set_city,
     '*get_business_fields': get_business_fields,
     '*set_business_field': set_business_field,
+    '*get_counties': get_counties,
     '/county_services': county_services,
-    '/help': '',
+    # '/help': '',
 }
 
 

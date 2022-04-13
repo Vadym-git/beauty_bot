@@ -8,8 +8,9 @@ from .models import Business, BusinessField, ServiceType, Counties, BotUser, Cit
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ['name', 'owner']
     fields = (('name', 'owner',), ('county', 'city'),
+              'type_of_business',
               'about', 'email', 'phone', 'telegram', 'insta')
-    readonly_fields = ('owner', 'name', 'county', 'city')
+    readonly_fields = ('owner', 'name', 'county', 'city', 'type_of_business')
 
 
 @admin.register(BusinessField)
@@ -20,6 +21,7 @@ class BusinessFieldAdmin(admin.ModelAdmin):
 @admin.register(ServiceType)
 class ServiceTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'owner']
+    readonly_fields = ['owner']
 
 
 @admin.register(Counties)
